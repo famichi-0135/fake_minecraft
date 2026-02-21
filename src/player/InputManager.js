@@ -12,10 +12,17 @@ export class InputManager {
     this.moveRight = false;
     this.isRunning = false;
 
+    // マウスボタンの状態
+    this.isLeftMouseDown = false;
+    this.isRightMouseDown = false;
+    this.actionCooldown = 0;
+    this.ACTION_INTERVAL = 0.2; // 0.2秒ごとに連続アクションをトリガー
+
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
     this._onWheel = this._onWheel.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
+    this._onMouseUp = this._onMouseUp.bind(this);
     this._onContextMenu = this._onContextMenu.bind(this);
   }
 
@@ -29,6 +36,7 @@ export class InputManager {
     document.addEventListener("keyup", this._onKeyUp);
     document.addEventListener("wheel", this._onWheel, { passive: false });
     document.addEventListener("mousedown", this._onMouseDown);
+    document.addEventListener("mouseup", this._onMouseUp);
     document.addEventListener("contextmenu", this._onContextMenu);
   }
 
@@ -40,6 +48,7 @@ export class InputManager {
     document.removeEventListener("keyup", this._onKeyUp);
     document.removeEventListener("wheel", this._onWheel);
     document.removeEventListener("mousedown", this._onMouseDown);
+    document.removeEventListener("mouseup", this._onMouseUp);
     document.removeEventListener("contextmenu", this._onContextMenu);
   }
 
@@ -73,6 +82,9 @@ export class InputManager {
         break;
       case "KeyE":
         EventBus.emit("input:toggle-inventory");
+        break;
+      case "KeyM":
+        EventBus.emit("input:toggle-map");
         break;
       case "Digit1":
       case "Digit2":
@@ -125,13 +137,52 @@ export class InputManager {
   _onMouseDown(event) {
     if (!this._isLocked()) return;
     if (event.button === 0) {
-      EventBus.emit("input:attack"); // 左クリック — ブロック破壊
+      this.isLeftMouseDown = true;
+      EventBus.emit("input:attack"); // 初回は即時発動
+      this.actionCooldown = this.ACTION_INTERVAL;
     } else if (event.button === 2) {
-      EventBus.emit("input:use"); // 右クリック — ブロック設置
+      this.isRightMouseDown = true;
+      EventBus.emit("input:use"); // 初回は即時発動
+      this.actionCooldown = this.ACTION_INTERVAL;
+    }
+  }
+
+  _onMouseUp(event) {
+    if (event.button === 0) {
+      this.isLeftMouseDown = false;
+    } else if (event.button === 2) {
+      this.isRightMouseDown = false;
     }
   }
 
   _onContextMenu(event) {
     if (this._isLocked()) event.preventDefault();
+  }
+
+  /**
+   * 毎フレームの入力状態の更新 (長押しの連続アクション発動)
+   * @param {number} delta - 経過秒
+   */
+  update(delta) {
+    if (!this._isLocked()) {
+      // ロックが外れたらマウス押下状態などをリセット
+      this.isLeftMouseDown = false;
+      this.isRightMouseDown = false;
+      return;
+    }
+
+    // クールダウン更新
+    if (this.actionCooldown > 0) {
+      this.actionCooldown -= delta;
+    } else {
+      // クールダウンがゼロになり、さらに押しっぱなしの場合は再度アクション発動
+      if (this.isLeftMouseDown) {
+        EventBus.emit("input:attack");
+        this.actionCooldown = this.ACTION_INTERVAL;
+      } else if (this.isRightMouseDown) {
+        EventBus.emit("input:use");
+        this.actionCooldown = this.ACTION_INTERVAL;
+      }
+    }
   }
 }

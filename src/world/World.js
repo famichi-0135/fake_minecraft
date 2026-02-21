@@ -21,6 +21,7 @@ export class World {
     textureAtlas,
     blockRegistry,
     modifiedBlocks,
+    seed,
   ) {
     this.scene = scene;
     this.materialFactory = materialFactory;
@@ -35,6 +36,7 @@ export class World {
     this.workerPool = new ChunkWorkerPool(
       materialFactory,
       textureAtlas.getUVMap(),
+      seed,
     );
 
     /** @type {Map<string, Chunk>} */
@@ -44,6 +46,9 @@ export class World {
 
     // GPU転送負荷分散用の待機キュー
     this.uploadQueue = [];
+
+    // 松明光源管理 (key: "x,y,z" => THREE.PointLight)
+    this.torchLights = new Map();
   }
 
   /**
@@ -206,6 +211,52 @@ export class World {
   }
 
   /**
+   * 指定座標のブロック型を返す（水を含む全ブロック）
+   * 水中判定など、水も検出したい場合はこちらを使用
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {string|null}
+   */
+  getBlockTypeAt(x, y, z) {
+    const key = `${x},${y},${z}`;
+    if (this.modifiedBlocks[key] !== undefined) {
+      return this.modifiedBlocks[key] === "air"
+        ? null
+        : this.modifiedBlocks[key];
+    }
+    const cx = Math.floor(x / CHUNK_SIZE);
+    const cz = Math.floor(z / CHUNK_SIZE);
+    const chunk = this.chunks.get(`${cx},${cz}`);
+    if (chunk && chunk.blockData) {
+      const idx = this._getBlockIndex(
+        x - cx * CHUNK_SIZE,
+        y - BOTTOM_Y,
+        z - cz * CHUNK_SIZE,
+      );
+      if (idx !== -1) {
+        const intType = chunk.blockData[idx];
+        const type = this.blockRegistry.getBlockName(intType);
+        if (type && type !== "air") return type;
+      }
+      return null;
+    }
+    return null;
+  }
+
+  /**
+   * 指定したチャンクがメッシュ構築済みか判定
+   * @param {number} cx
+   * @param {number} cz
+   * @returns {boolean}
+   */
+  isChunkLoaded(cx, cz) {
+    const chunk = this.chunks.get(`${cx},${cz}`);
+    // chunkが存在し、かつメッシュが作成されていれば準備完了
+    return chunk ? chunk.mesh !== null : false;
+  }
+
+  /**
    * チャンクの Map を取得 (Raycaster 等で使用)
    * @returns {Map<string, Chunk>}
    */
@@ -245,6 +296,11 @@ export class World {
     // データ更新
     this.modifiedBlocks[bKey] = "air";
 
+    // 松明の光源を除去
+    if (type === "torch") {
+      this._removeTorchLight(bKey);
+    }
+
     // 該当するチャンクを探す
     const cx = Math.floor(pos.x / CHUNK_SIZE);
     const cz = Math.floor(pos.z / CHUNK_SIZE);
@@ -266,6 +322,34 @@ export class World {
     }
 
     return { pos: pos.clone(), type };
+  }
+
+  /**
+   * 松明の光源を除去する
+   * @param {string} key "x,y,z"
+   */
+  _removeTorchLight(key) {
+    const light = this.torchLights.get(key);
+    if (light) {
+      this.scene.remove(light);
+      this.torchLights.delete(key);
+    }
+  }
+
+  /**
+   * 松明の光源を追加する
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   */
+  _addTorchLight(x, y, z) {
+    const key = `${x},${y},${z}`;
+    // 既に存在する場合は作らない
+    if (this.torchLights.has(key)) return;
+    const light = new THREE.PointLight(0xffaa44, 1.5, 12);
+    light.position.set(x, y + 0.5, z);
+    this.scene.add(light);
+    this.torchLights.set(key, light);
   }
 
   /**
@@ -297,6 +381,12 @@ export class World {
       // 隣接チャンクの再構築判定
       this._rebuildNeighborChunksIfNeeded(voxelPos.x, voxelPos.z, cx, cz);
     }
+
+    // 松明の光源を追加
+    if (blockType === "torch") {
+      this._addTorchLight(voxelPos.x, voxelPos.y, voxelPos.z);
+    }
+
     return true;
   }
 

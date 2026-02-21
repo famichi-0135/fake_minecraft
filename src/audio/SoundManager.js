@@ -31,8 +31,30 @@ export class SoundManager {
     this._initOnce = true;
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     this.masterGain = this.ctx.createGain();
+
+    // settings:changed イベントで初期化音量の同期を行う（メインスクリプトでSettingsManagerが読み込まれた時点）
+    // （または初回はデフォルトで 0.3 にしておく）
     this.masterGain.gain.value = 0.3;
+
+    EventBus.on("settings:changed:masterVolume", (volume) => {
+      this._updateMasterVolume(volume);
+    });
+    // 初期設定値の受信用
+    EventBus.on("settings:changed", (settings) => {
+      if (settings.masterVolume !== undefined) {
+        this._updateMasterVolume(settings.masterVolume);
+      }
+    });
+
     this.masterGain.connect(this.ctx.destination);
+  }
+
+  _updateMasterVolume(volume) {
+    if (this.masterGain) {
+      // 少しだけ緩やかに音量を変更する (ポップノイズ防止)
+      const now = this.ctx.currentTime || 0;
+      this.masterGain.gain.setTargetAtTime(volume, now, 0.05);
+    }
   }
 
   /**

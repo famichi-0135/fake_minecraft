@@ -95,7 +95,13 @@
   { "id": "ice", "name": "氷", "iconTex": "ice", "transparent": true },
   { "id": "water", "name": "水", "iconTex": "water", "transparent": true },
   { "id": "lava", "name": "溶岩", "iconTex": "lava", "transparent": true },
-  { "id": "torch", "name": "松明", "iconTex": "torch", "transparent": true },
+  {
+    "id": "torch",
+    "name": "松明",
+    "iconTex": "torch",
+    "transparent": true,
+    "model": "cross"
+  },
   {
     "id": "furnace",
     "name": "かまど",
@@ -149,19 +155,22 @@
     "id": "flower_red",
     "name": "赤い花",
     "iconTex": "flower_red",
-    "transparent": true
+    "transparent": true,
+    "model": "cross"
   },
   {
     "id": "flower_yellow",
     "name": "黄色い花",
     "iconTex": "flower_yellow",
-    "transparent": true
+    "transparent": true,
+    "model": "cross"
   },
   {
     "id": "tall_grass",
     "name": "草",
     "iconTex": "tall_grass",
-    "transparent": true
+    "transparent": true,
+    "model": "cross"
   },
   { "id": "apple", "name": "りんご", "iconTex": "apple", "transparent": false },
   { "id": "bread", "name": "パン", "iconTex": "bread", "transparent": false },

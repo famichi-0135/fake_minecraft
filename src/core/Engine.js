@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { SKY_COLOR, CHUNK_SIZE, RENDER_DISTANCE } from "./Constants.js";
+import { EventBus } from "./EventBus.js";
 
 /**
  * Three.js シーン・カメラ・レンダラー管理 + ゲームループ
@@ -35,6 +36,19 @@ export class Engine {
       1000,
     );
     this.camera.rotation.order = "YXZ";
+
+    // 設定管理からのFOV変更（イベント）を待機して反映
+    EventBus.on("settings:changed:fov", (fov) => {
+      this.camera.fov = fov;
+      this.camera.updateProjectionMatrix();
+    });
+    // 初期設定適用時のため
+    EventBus.on("settings:changed", (settings) => {
+      if (settings.fov !== undefined) {
+        this.camera.fov = settings.fov;
+        this.camera.updateProjectionMatrix();
+      }
+    });
 
     // ライティング
     this.ambientLight = new THREE.AmbientLight(0xffffff, 0.7);

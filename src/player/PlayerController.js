@@ -29,8 +29,13 @@ export class PlayerController {
 
     this.velocity = new THREE.Vector3();
     this.canJump = false;
+    this.inWater = false; // main.jsから参照可能
     this.health = null; // main.js からセット
     this._fallStartY = null;
+
+    // 地形生成待ちフラグ (初期生成時に即落下死するのを防ぐ)
+    this.isWorldReady = false;
+    this.isInitialFall = true; // 初回スポーン時の落下ダメージを無効化するためのフラグ
 
     // ジャンプイベント
     EventBus.on("input:jump", () => {
@@ -49,19 +54,34 @@ export class PlayerController {
     const pos = this.camera.position;
 
     // チャンク更新
-    this.world.updateChunks(
-      Math.floor(pos.x / CHUNK_SIZE),
-      Math.floor(pos.z / CHUNK_SIZE),
-    );
+    const cx = Math.floor(pos.x / CHUNK_SIZE);
+    const cz = Math.floor(pos.z / CHUNK_SIZE);
+    this.world.updateChunks(cx, cz);
 
-    // 水中判定
-    const feetBlockType = this.world.getSolidBlockType(
+    // 地形生成が完了するまで物理演算をストップして空中に待機させる
+    if (!this.isWorldReady) {
+      if (this.world.isChunkLoaded(cx, cz)) {
+        this.isWorldReady = true;
+      } else {
+        this.velocity.set(0, 0, 0);
+        return;
+      }
+    }
+
+    // 水中判定（頭の位置も含めて判定）
+    const feetBlockType = this.world.getBlockTypeAt(
       Math.floor(pos.x),
       Math.floor(pos.y - PLAYER_HEIGHT + 0.5),
       Math.floor(pos.z),
     );
-    const inWater = feetBlockType === "water";
-    const waterSpeedMul = inWater ? 0.5 : 1.0;
+    const headBlockType = this.world.getBlockTypeAt(
+      Math.floor(pos.x),
+      Math.floor(pos.y),
+      Math.floor(pos.z),
+    );
+    const inWater = feetBlockType === "water" || headBlockType === "water";
+    this.inWater = inWater; // 公開プロパティを更新
+    const waterSpeedMul = inWater ? 0.85 : 1.0;
 
     // 水平移動
     const speed =
@@ -137,7 +157,12 @@ export class PlayerController {
 
         // 落下ダメージ判定
         if (this.health && this._fallStartY !== null) {
-          this.health.checkFallDamage(this._fallStartY, pos.y);
+          if (this.isInitialFall) {
+            // 初回スポーン時の落下ではダメージを受けない
+            this.isInitialFall = false;
+          } else {
+            this.health.checkFallDamage(this._fallStartY, pos.y);
+          }
         }
         this._fallStartY = null;
       } else {

@@ -1,11 +1,21 @@
 import { LCG } from "./Random.js";
 
-// Perlin Noise の置換テーブルを LCG で初期化
-const rng = LCG(9999);
+// Perlin Noise の置換テーブル
 const P = new Uint8Array(256);
-for (let i = 0; i < 256; i++) P[i] = Math.floor(rng() * 256);
 const p = new Uint8Array(512);
-for (let i = 0; i < 512; i++) p[i] = P[i % 256];
+
+/**
+ * シード値を設定し、ノイズの置換テーブルを初期化する
+ * @param {number} seed
+ */
+export function setSeed(seed) {
+  const rng = LCG(seed);
+  for (let i = 0; i < 256; i++) P[i] = Math.floor(rng() * 256);
+  for (let i = 0; i < 512; i++) p[i] = P[i % 256];
+}
+
+// デフォルトの初期化 (互換性のため)
+setSeed(9999);
 
 function fade(t) {
   return t * t * t * (t * (t * 6 - 15) + 10);

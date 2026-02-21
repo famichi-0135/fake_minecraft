@@ -23,7 +23,7 @@ export class Hunger {
 
     // ジャンプで消費
     EventBus.on("input:jump", () => {
-      this.consume(0.05);
+      this.consume(0.001);
     });
   }
 
@@ -37,7 +37,7 @@ export class Hunger {
     if (isSprinting) {
       this._sprintTimer += delta;
       if (this._sprintTimer >= 1.0) {
-        this.consume(0.15);
+        this.consume(0.001);
         this._sprintTimer = 0;
       }
     }
@@ -50,7 +50,7 @@ export class Hunger {
       this._healTimer += delta;
       if (this._healTimer >= 4.0) {
         this.health.heal(1);
-        this.consume(0.5);
+        this.consume(0.001);
         this._healTimer = 0;
       }
     } else {

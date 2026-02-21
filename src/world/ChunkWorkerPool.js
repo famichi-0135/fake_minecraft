@@ -8,8 +8,9 @@ export class ChunkWorkerPool {
   /**
    * @param {import('../rendering/MaterialFactory.js').MaterialFactory} materialFactory
    * @param {Object} uvMap - アトラスUVデータ
+   * @param {number} seed - 地形生成用シード値
    */
-  constructor(materialFactory, uvMap) {
+  constructor(materialFactory, uvMap, seed) {
     this.materialFactory = materialFactory;
 
     const concurrency = navigator.hardwareConcurrency || 4;
@@ -26,7 +27,7 @@ export class ChunkWorkerPool {
     // Worker初期化
     for (let i = 0; i < this.maxWorkers; i++) {
       const worker = new ChunkWorker();
-      worker.postMessage({ type: "init", uvMap });
+      worker.postMessage({ type: "init", uvMap, seed });
       worker.onmessage = this.onWorkerMessage.bind(this, i);
       this.workers.push(worker);
       this.workerStatus.push(false);

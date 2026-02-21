@@ -19,8 +19,36 @@
     <!-- ホットバー -->
     <div id="toolbar"></div>
 
+    <!-- タイトル画面 -->
+    <div id="title-screen">
+      <div class="title-content">
+        <h1 class="game-title">SURVIVAL VOXEL</h1>
+        <p class="subtitle">BROWSER SANDBOX</p>
+
+        <div class="world-selection">
+          <h3>WORLD SELECT</h3>
+          <ul id="world-list">
+            <!-- JavaScriptで動的に追加 -->
+            <li class="empty-world-msg">No worlds found.</li>
+          </ul>
+        </div>
+
+        <div class="title-actions">
+          <input
+            type="text"
+            id="new-world-name"
+            placeholder="New World Name"
+            maxlength="20"
+          />
+          <button id="btn-create-world" class="btn-primary">
+            🌍 新規ワールド作成
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ポーズ画面 -->
-    <div id="blocker">
+    <div id="blocker" style="display: none">
       <div id="instructions">
         <h1 class="game-title">SURVIVAL VOXEL</h1>
         <p class="subtitle">BROWSER SANDBOX</p>
@@ -63,11 +91,80 @@
             <div class="key-group"><span class="key">スクロール</span></div>
           </div>
         </div>
-        <button class="btn-primary" style="margin-bottom: 12px">
-          ▶ クリックしてスタート
-        </button>
-        <br />
-        <button id="reset-btn" class="btn-primary">🗑 ワールドリセット</button>
+        <div class="pause-actions">
+          <button
+            id="btn-resume-game"
+            class="btn-primary"
+            style="margin-bottom: 12px; width: 100%"
+          >
+            ▶ ゲームに戻る
+          </button>
+          <button
+            id="btn-open-settings"
+            class="btn-secondary"
+            style="margin-bottom: 12px; width: 100%"
+          >
+            ⚙️ 設定
+          </button>
+          <button
+            id="btn-back-to-title"
+            class="btn-danger"
+            style="margin-bottom: 12px; width: 100%"
+          >
+            🏠 セーブしてタイトルへ戻る
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 設定画面 -->
+    <div id="settings-ui">
+      <div class="settings-header">
+        <h2>SETTINGS</h2>
+        <span class="close-hint">[ESC] で戻る</span>
+      </div>
+      <div class="settings-body">
+        <div class="setting-item">
+          <label>マスター音量: <span id="val-volume">30</span>%</label>
+          <input type="range" id="slider-volume" min="0" max="100" value="30" />
+        </div>
+        <div class="setting-item">
+          <label>マウス感度: <span id="val-sensitivity">20</span></label>
+          <input
+            type="range"
+            id="slider-sensitivity"
+            min="1"
+            max="100"
+            value="20"
+          />
+        </div>
+        <div class="setting-item">
+          <label>視野角 (FOV): <span id="val-fov">75</span></label>
+          <input type="range" id="slider-fov" min="60" max="110" value="75" />
+        </div>
+        <div class="setting-item">
+          <label
+            >描画距離: <span id="val-render-dist">18</span> チャンク
+            (※再構築必要)</label
+          >
+          <input
+            type="range"
+            id="slider-render-dist"
+            min="8"
+            max="32"
+            value="18"
+            disabled
+          />
+        </div>
+
+        <div class="settings-footer">
+          <button id="btn-reset-settings" class="btn-danger">
+            初期設定に戻す
+          </button>
+          <button id="btn-close-settings" class="btn-primary">
+            適用して閉じる
+          </button>
+        </div>
       </div>
     </div>
 

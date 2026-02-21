@@ -4,6 +4,8 @@ import "../styles/hud.css";
 import "../styles/inventory.css";
 import "../styles/pause.css";
 import "../styles/survival.css";
+import "../styles/ui-extension.css";
+import "../styles/ui-extension.css";
 
 import { CHUNK_SIZE } from "./core/Constants.js";
 
@@ -50,16 +52,47 @@ import { HealthBarUI } from "./ui/HealthBarUI.js";
 import { HungerBarUI } from "./ui/HungerBarUI.js";
 import { TimeBarUI } from "./ui/TimeBarUI.js";
 import { MinimapUI } from "./ui/MinimapUI.js";
+import { MapUI } from "./ui/MapUI.js";
 
 // --- Storage ---
 import { SaveManager } from "./storage/SaveManager.js";
+import { SettingsManager } from "./core/SettingsManager.js";
+
+// --- Math ---
+import { setSeed } from "./math/Noise.js";
+import { setGlobalSeed } from "./math/Random.js";
 
 // --- Audio ---
 import { SoundManager } from "./audio/SoundManager.js";
 
-// ===== ブートストラップ =====
-function boot() {
+// --- UI Extension ---
+import { TitleScreenUI } from "./ui/TitleScreenUI.js";
+import { SettingsUI } from "./ui/SettingsUI.js";
+
+// ===== グローバルインスタンス =====
+const saveManager = new SaveManager();
+const settingsManager = new SettingsManager();
+const soundManager = new SoundManager();
+
+// ===== エントリポイント =====
+function init() {
+  // --- UI 初期化 ---
+  const titleScreen = new TitleScreenUI(saveManager, (worldName) => {
+    titleScreen.hide();
+    startGameFlow();
+  });
+
+  // タイトル画面表示
+  titleScreen.show();
+}
+
+// ===== ブートストラップ (ゲーム本体) =====
+function startGameFlow() {
   const canvas = document.getElementById("game-canvas");
+
+  // HUD等を表示 (タイトル画面では隠しておくべき要素がある場合)
+  document.getElementById("crosshair").style.display = "block";
+  document.getElementById("toolbar").style.display = "flex";
 
   // 1. エンジン初期化
   const engine = new Engine(canvas);
@@ -74,9 +107,13 @@ function boot() {
   materialFactory.buildAll();
 
   // 3. セーブデータ復元
-  const saveManager = new SaveManager();
   const savedData = saveManager.load();
   const modifiedBlocks = savedData?.blocks || {};
+
+  // シード値をワールド全体に適用
+  const seed = saveManager.getSeed();
+  setSeed(seed);
+  setGlobalSeed(seed);
 
   // 4. インベントリ & ホットバー & ツール & 精錬
   const inventory = new Inventory();
@@ -124,6 +161,7 @@ function boot() {
     textureAtlas,
     blockRegistry,
     modifiedBlocks,
+    seed,
   );
 
   // 6. サバイバルシステム
@@ -155,7 +193,7 @@ function boot() {
       savedData.playerPos.z,
     );
   } else {
-    camera.position.set(8, 30, 8);
+    camera.position.set(8, 60, 8);
   }
 
   // ★ 初期チャンクロード
@@ -163,6 +201,11 @@ function boot() {
   const initCZ = Math.floor(camera.position.z / CHUNK_SIZE);
   world.updateChunks(initCX, initCZ);
   console.log(`[boot] 初期チャンクロード完了 chunks=${world.getChunks().size}`);
+
+  // 水中オーバーレイ要素の動的生成
+  const waterOverlay = document.createElement("div");
+  waterOverlay.id = "water-overlay";
+  document.body.appendChild(waterOverlay);
 
   // 8. インタラクション
   const raycaster = new BlockRaycaster(camera, scene, world);
@@ -185,15 +228,39 @@ function boot() {
   pauseScreen.init(camera);
   inputManager.attach(() => pauseScreen.getIsLocked());
 
+  // 設定・拡張UIの統合
+  const settingsUI = new SettingsUI(settingsManager, pauseScreen);
+  // SettingsManagerのロード済みの値をイベントとして発火し、各システムへ初期設定を適用
+  settingsManager.resetToDefault(); // 一旦デフォルト値で満たす
+  settingsManager.load(); // 保存値をロード・上書き
+  // EventBus経由でEngine(FOV)やPauseScreen(感度)に通知
+  EventBus.emit("settings:changed", settingsManager.get());
+
+  // PauseScreenに直接マウス感度を持たせる（EventBus受信も可能だが確実にするため）
+  EventBus.on("settings:changed:mouseSensitivity", (val) => {
+    pauseScreen.mouseSensitivity = val;
+  });
+  pauseScreen.mouseSensitivity = settingsManager.get().mouseSensitivity;
+
+  // 「セーブしてタイトルに戻る」ボタンの挙動
+  document
+    .getElementById("btn-back-to-title")
+    ?.addEventListener("click", () => {
+      saveManager.save();
+      location.reload(); // 一旦リロードしてタイトル画面に戻す方式
+    });
+
   const hotbarUI = new HotbarUI(textureAtlas, inventory, hotbar);
   const inventoryUI = new InventoryUI(textureAtlas, inventory, hotbar);
   const craftingSystem = new CraftingSystem(inventory);
   const craftingUI = new CraftingUI(textureAtlas, inventory, craftingSystem);
+  const mapUI = new MapUI(world, blockRegistry, camera);
   const uiManager = new UIManager(
     pauseScreen,
     hotbarUI,
     inventoryUI,
     craftingUI,
+    mapUI,
   );
 
   // サバイバル HUD
@@ -204,8 +271,8 @@ function boot() {
   // ミニマップ
   const minimap = new MinimapUI(world, blockRegistry);
 
-  // サウンド
-  const soundManager = new SoundManager();
+  // サウンド (既出のsoundManagerをそのまま使うが、初期設定を反映させる)
+  EventBus.emit("settings:changed", settingsManager.get());
 
   // 初期描画
   hotbarUI.render();
@@ -220,6 +287,7 @@ function boot() {
   engine.onUpdate((delta) => {
     try {
       if (pauseScreen.getIsLocked() && !health.isDead) {
+        inputManager.update(delta);
         playerController.update(delta);
         hunger.update(delta, inputManager.isRunning);
         // 足音
@@ -237,6 +305,13 @@ function boot() {
       world.update(delta); // チャンクメッシュのGPUアップロードキュー消化
       uiManager.update();
 
+      // 水中オーバーレイ切り替え
+      if (playerController.inWater) {
+        waterOverlay.classList.add("active");
+      } else {
+        waterOverlay.classList.remove("active");
+      }
+
       // ミニマップ更新 (10フレームに1回)
       minimapCounter++;
       if (minimapCounter >= 10) {
@@ -249,11 +324,14 @@ function boot() {
   });
 
   engine.start();
+
+  // タイトル画面のボタンプッシュ(ユーザー操作)を引き継いで、最初のPointerLockを要求する
+  canvas.requestPointerLock();
 }
 
 // DOM 準備完了で起動
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot);
+  document.addEventListener("DOMContentLoaded", init);
 } else {
-  boot();
+  init();
 }

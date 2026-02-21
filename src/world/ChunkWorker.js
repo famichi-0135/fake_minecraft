@@ -2,6 +2,8 @@ import { TerrainGenerator } from "./TerrainGenerator.js";
 import { BlockRegistry } from "./BlockRegistry.js";
 import { CHUNK_SIZE, BOTTOM_Y } from "../core/Constants.js";
 import blocksData from "../data/blocks.json"; // Worker内での直接ロード
+import { setSeed } from "../math/Noise.js";
+import { setGlobalSeed } from "../math/Random.js";
 
 // Workerスレッド内での初期化
 const blockRegistry = new BlockRegistry();
@@ -105,11 +107,85 @@ const FACES = [
   }, // Back
 ];
 
+// 十字面（クロスモデル）の方向定義（草、花、松明など）
+const CROSS_FACES = [
+  {
+    // Diagonal 1: Front-Left to Back-Right (Front side)
+    dir: [0.707, 0, 0.707],
+    corners: [
+      [0, 0, 1],
+      [1, 0, 0],
+      [1, 1, 0],
+      [0, 1, 1],
+    ],
+    uvs: [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+  },
+  {
+    // Diagonal 1: (Back side)
+    dir: [-0.707, 0, -0.707],
+    corners: [
+      [1, 0, 0],
+      [0, 0, 1],
+      [0, 1, 1],
+      [1, 1, 0],
+    ],
+    uvs: [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+  },
+  {
+    // Diagonal 2: Front-Right to Back-Left (Front side)
+    dir: [-0.707, 0, 0.707],
+    corners: [
+      [1, 0, 1],
+      [0, 0, 0],
+      [0, 1, 0],
+      [1, 1, 1],
+    ],
+    uvs: [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+  },
+  {
+    // Diagonal 2: (Back side)
+    dir: [0.707, 0, -0.707],
+    corners: [
+      [0, 0, 0],
+      [1, 0, 1],
+      [1, 1, 1],
+      [0, 1, 0],
+    ],
+    uvs: [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+  },
+];
+
 let uvMap = null;
 
 self.onmessage = function (e) {
   if (e.data.type === "init") {
     uvMap = e.data.uvMap;
+    // Workerスレッド内でもメインスレッドと同じシードで乱数を初期化
+    if (e.data.seed !== undefined) {
+      setSeed(e.data.seed);
+      setGlobalSeed(e.data.seed);
+      console.log(`[ChunkWorker] Initialized with seed: ${e.data.seed}`);
+    }
     return;
   }
 
@@ -242,63 +318,74 @@ self.onmessage = function (e) {
         const blockDef = blockRegistry.get(type);
         if (!blockDef) continue;
 
-        for (let f = 0; f < 6; f++) {
-          const face = FACES[f];
+        const isCrossModel = blockDef.model === "cross";
+        const facesToIterate = isCrossModel ? CROSS_FACES : FACES;
 
-          // 隣接ブロックの確認先も step 分だけ離した座標
-          const nx = x + face.dir[0] * step;
-          const ny = y + face.dir[1] * step;
-          const nz = z + face.dir[2] * step;
-
-          const nlx = nx - startX;
-          const nlz = nz - startZ;
-          const nly = ny - BOTTOM_Y;
-
-          let neighborIntType = 0;
-          let isNeighborOut = false;
-          if (
-            nlx >= 0 &&
-            nlx < CHUNK_SIZE &&
-            nlz >= 0 &&
-            nlz < CHUNK_SIZE &&
-            nly >= 0 &&
-            nly < 256
-          ) {
-            neighborIntType = blockDataArray[getIndex(nlx, nly, nlz)];
-          } else {
-            // チャンク外の場合は modifiedBlocksBase を見る（近景生成時など）か、仮に空気とする
-            // チャンク描画の性質上、隣のチャンクデータを持っていない場合は空気として描画する
-            const nKey = `${nx},${ny},${nz}`;
-            if (modifiedBlocksBase[nKey] !== undefined) {
-              neighborIntType = blockRegistry.getBlockIntId(
-                modifiedBlocksBase[nKey],
-              );
-            } else {
-              isNeighborOut = true;
-            }
-          }
-
-          let neighborType = "air";
-          if (!isNeighborOut) {
-            neighborType = blockRegistry.getBlockName(neighborIntType);
-          }
+        for (let f = 0; f < facesToIterate.length; f++) {
+          const face = facesToIterate[f];
 
           let isVisible = false;
 
-          if (!neighborType || neighborType === "air") {
+          if (isCrossModel) {
+            // クロスモデルの場合は隣接ブロックに依存せず常に描画する
             isVisible = true;
-          } else if (blockRegistry.isTransparent(neighborType)) {
-            if (isTransparent && type === neighborType) {
-              isVisible = false;
+          } else {
+            // 通常の立方体ブロックの場合の隣接カリング判定
+            const nx = x + face.dir[0] * step;
+            const ny = y + face.dir[1] * step;
+            const nz = z + face.dir[2] * step;
+
+            const nlx = nx - startX;
+            const nlz = nz - startZ;
+            const nly = ny - BOTTOM_Y;
+
+            let neighborIntType = 0;
+            let isNeighborOut = false;
+            if (
+              nlx >= 0 &&
+              nlx < CHUNK_SIZE &&
+              nlz >= 0 &&
+              nlz < CHUNK_SIZE &&
+              nly >= 0 &&
+              nly < 256
+            ) {
+              neighborIntType = blockDataArray[getIndex(nlx, nly, nlz)];
             } else {
+              // チャンク外の場合は modifiedBlocksBase を見る（近景生成時など）か、仮に空気とする
+              const nKey = `${nx},${ny},${nz}`;
+              if (modifiedBlocksBase[nKey] !== undefined) {
+                neighborIntType = blockRegistry.getBlockIntId(
+                  modifiedBlocksBase[nKey],
+                );
+              } else {
+                isNeighborOut = true;
+              }
+            }
+
+            let neighborType = "air";
+            if (!isNeighborOut) {
+              neighborType = blockRegistry.getBlockName(neighborIntType);
+            } else if (type === "water") {
+              // チャンク境界で隣のデータが不明な場合、
+              // 水ブロックの隣は水が続いているとみなし壁面を描画しない
+              neighborType = "water";
+            }
+
+            if (!neighborType || neighborType === "air") {
               isVisible = true;
+            } else if (blockRegistry.isTransparent(neighborType)) {
+              if (isTransparent && type === neighborType) {
+                isVisible = false;
+              } else {
+                isVisible = true;
+              }
             }
           }
 
           if (isVisible) {
             // テクスチャ(ブロック種ごとの面)の特定
             let texKey = blockDef.iconTex;
-            if (blockDef.faces) {
+            if (blockDef.faces && !isCrossModel) {
               if (f === 2) texKey = blockDef.faces.top;
               else if (f === 3) texKey = blockDef.faces.bottom;
               else texKey = blockDef.faces.sides;

@@ -13,7 +13,8 @@ export class TerrainGenerator {
    * @returns {string} バイオーム名
    */
   getBiome(x, z) {
-    const bn = noise(x * 0.01 + 1000, z * 0.01 + 1000);
+    // スケールを大幅に縮小 → 1バイオームあたり数百〜1000ブロック規模に
+    const bn = noise(x * 0.001 + 1000, z * 0.001 + 1000);
     if (bn < -0.2) return "savanna";
     if (bn > 0.4) return "snowy";
     if (bn > 0.2) return "mountain";
@@ -28,14 +29,30 @@ export class TerrainGenerator {
    * @returns {number}
    */
   getHeight(x, z, biome) {
-    const bn = noise(x * 0.01 + 1000, z * 0.01 + 1000);
-    let finalH = noise(x * 0.05, z * 0.05) + 0.5 * noise(x * 0.1, z * 0.1);
+    // 大陸性の緩やかなうねり（広域）
+    const continental = noise(x * 0.002, z * 0.002) * 0.6;
+    // 丘陵（中域）
+    const hills = noise(x * 0.01, z * 0.01) * 0.8;
+    // ディテール（近域）
+    const detail = noise(x * 0.04, z * 0.04) * 0.3;
+
+    let baseH = continental + hills + detail;
+
     if (biome === "mountain" || biome === "snowy") {
-      finalH += Math.max(0, bn - 0.2) * 0.8;
+      // 山岳：三段重ねで急峻な地形＋指数関数で頂上をとがらせる
+      const mountainNoise = noise(x * 0.008 + 500, z * 0.008 + 500);
+      const ridge = Math.max(0, mountainNoise) ** 1.5;
+      baseH += ridge * 1.8 + 0.5;
     } else if (biome === "savanna") {
-      finalH *= 0.5;
+      // サバンナ：なだらかな台地
+      baseH *= 0.4;
+      baseH += 0.1;
+    } else {
+      // plains：穏やかなうねり
+      baseH *= 0.7;
     }
-    return Math.floor(finalH * 15);
+
+    return Math.floor(baseH * 30);
   }
 
   /**
@@ -66,11 +83,15 @@ export class TerrainGenerator {
 
   /**
    * 鉱石タイプを判定（石の層のみ）
+   * @param {number} x - X座標
    * @param {number} y - Y座標
+   * @param {number} z - Z座標
    * @returns {string|null} 鉱石ブロックID、or null (石のまま)
    */
-  getOreType(y) {
-    const r = Math.random();
+  getOreType(x, y, z) {
+    // 座標ベースの決定論的乱数（同じ座標は常に同じ結果）
+    const n = Math.sin(x * 12.9898 + y * 37.719 + z * 78.233) * 43758.5453;
+    const r = n - Math.floor(n);
     if (y < BOTTOM_Y + 15 && r < 0.002) return "diamond_ore";
     if (y < BOTTOM_Y + 30 && r < 0.005) return "gold_ore";
     if (r < 0.02) return "iron_ore";
@@ -143,7 +164,7 @@ export class TerrainGenerator {
 
             // 鉱石生成
             if (type === "stone" && y < h - 4) {
-              const oreType = this.getOreType(y);
+              const oreType = this.getOreType(x, y, z);
               if (oreType) type = oreType;
             }
 

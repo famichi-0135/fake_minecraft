@@ -1,0 +1,280 @@
+/* タイトル画面 */
+#title-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  display: flex; /* 初期表示時にflexにする */
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  animation: UI_FadeIn 0.5s ease-out;
+}
+
+.title-content {
+  background: var(--panel-bg);
+  padding: 50px 80px;
+  border-radius: 20px;
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.title-content .game-title {
+  margin-top: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.8),
+    0 0 10px var(--accent);
+  color: #fff;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.title-content .subtitle {
+  color: var(--text-sub);
+  letter-spacing: 2px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.world-selection {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.world-selection h3 {
+  margin-top: 0;
+  font-size: 14px;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+#world-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.empty-world-msg {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-sub);
+  font-style: italic;
+}
+
+.world-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.world-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.world-item:last-child {
+  border-bottom: none;
+}
+
+.world-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.world-actions button {
+  padding: 6px 12px;
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.title-actions {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+#new-world-name {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--panel-border);
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  font-family: inherit;
+}
+
+#new-world-name:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* ポーズ画面追加アクション */
+.pause-actions {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-danger {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 1px solid rgba(229, 57, 53, 0.5);
+  background: rgba(229, 57, 53, 0.1);
+  color: #ff8a80;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger:hover {
+  background: rgba(229, 57, 53, 0.3);
+  border-color: var(--danger);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 57, 53, 0.3);
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* 設定画面 */
+#settings-ui {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background: var(--panel-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  z-index: 60;
+  flex-direction: column;
+  animation: UI_FadeIn_Center 0.3s ease-out forwards;
+}
+
+.settings-header {
+  padding: 20px 30px;
+  border-bottom: 1px solid var(--panel-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px 16px 0 0;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  letter-spacing: 2px;
+  font-size: 20px;
+}
+
+.settings-body {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-item label {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-main);
+  display: flex;
+  justify-content: space-between;
+}
+
+.setting-item span {
+  color: var(--accent);
+}
+
+.setting-item input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.setting-item input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  transition: transform 0.1s;
+}
+
+.setting-item input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.settings-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

@@ -35,7 +35,16 @@ export class PauseScreen {
     document.addEventListener("pointerlockerror", this._onPointerLockError);
 
     // クリックでゲーム開始
-    this.instructionsEl.addEventListener("click", () => {
+    this.instructionsEl.addEventListener("click", (e) => {
+      // "ゲームに戻る" ボタンの場合はロック取得を許可する
+      if (e.target.closest("#btn-resume-game")) {
+        this.canvas.requestPointerLock();
+        return;
+      }
+
+      // それ以外のUIボタンなどをクリックした場合はロック取得をスキップ
+      if (e.target.closest("button") || e.target.closest("input")) return;
+
       this.canvas.requestPointerLock();
     });
 
@@ -87,14 +96,22 @@ export class PauseScreen {
   }
 
   _onPointerLockError() {
-    console.error("PointerLock Error");
+    console.error(
+      "PointerLock Error. User needs to interact with the document first.",
+    );
+    this.isLocked = false;
+    if (!this.pausedForUI) {
+      this.blockerEl.style.display = "flex";
+    }
   }
 
   _onMouseMove(event) {
     if (!this.camera) return;
     const euler = this.camera.rotation;
-    euler.y -= event.movementX * 0.002;
-    euler.x -= event.movementY * 0.002;
+    // this.mouseSensitivity は main.js 側で EventBus/SettingsManager から初期化・更新される
+    const sensitivity = this.mouseSensitivity || 0.002;
+    euler.y -= event.movementX * sensitivity;
+    euler.x -= event.movementY * sensitivity;
     euler.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.x));
   }
 }
