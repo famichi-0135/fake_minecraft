@@ -1,0 +1,30 @@
+[
+  {
+    "id": "plains",
+    "noiseRange": [-0.2, 0.2],
+    "surface": "grass",
+    "subsurface": "dirt",
+    "trees": { "type": "oak", "probability": 0.02 }
+  },
+  {
+    "id": "savanna",
+    "noiseRange": [-1.0, -0.2],
+    "surface": "dry_grass",
+    "subsurface": "dirt",
+    "trees": { "type": "acacia", "probability": 0.01 }
+  },
+  {
+    "id": "mountain",
+    "noiseRange": [0.2, 0.4],
+    "surface": "stone",
+    "subsurface": "stone",
+    "trees": null
+  },
+  {
+    "id": "snowy",
+    "noiseRange": [0.4, 1.0],
+    "surface": "snow",
+    "subsurface": "dirt",
+    "trees": null
+  }
+]

@@ -1,0 +1,166 @@
+/* ===== 体力バー ===== */
+#health-bar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 2px;
+  z-index: 15;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.heart {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.1s;
+}
+
+.heart.full {
+  color: #e53935;
+}
+.heart.half {
+  color: #ff8a80;
+}
+.heart.empty {
+  color: #555;
+  opacity: 0.5;
+}
+
+/* ===== 空腹バー ===== */
+#hunger-bar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 2px;
+  z-index: 15;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.hunger-icon {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.1s;
+}
+
+.hunger-icon.full {
+  color: #8d6e63;
+}
+.hunger-icon.half {
+  color: #a1887f;
+}
+.hunger-icon.empty {
+  color: #555;
+  opacity: 0.5;
+}
+
+/* ===== ダメージフラッシュ ===== */
+#damage-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(255, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  z-index: 25;
+  transition: opacity 0.15s;
+}
+
+#damage-flash.active {
+  opacity: 1;
+}
+
+/* ===== 死亡画面 ===== */
+#death-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(120, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  animation: UI_FadeIn 0.5s ease-out;
+}
+
+.death-content {
+  text-align: center;
+}
+
+.death-content h1 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: #ff1744;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  margin-bottom: 30px;
+  letter-spacing: 8px;
+}
+
+/* ===== 時刻表示 ===== */
+#time-bar {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  padding: 4px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 15;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: bold;
+}
+
+#time-bar .time-icon {
+  font-size: 16px;
+}
+
+/* ===== ミニマップ ===== */
+#minimap {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+  width: 120px;
+  height: 120px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  z-index: 15;
+  image-rendering: pixelated;
+  opacity: 0.85;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== 精錬UIボタン ===== */
+.smelt-btn {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  transition: transform 0.1s;
+}
+.smelt-btn:hover {
+  transform: scale(1.05);
+}
+.smelt-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+}

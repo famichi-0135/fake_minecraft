@@ -1,0 +1,30 @@
+[
+  {
+    "id": "flower_red",
+    "name": "赤い花",
+    "iconTex": "flower_red",
+    "transparent": true,
+    "nonSolid": true
+  },
+  {
+    "id": "flower_yellow",
+    "name": "黄色い花",
+    "iconTex": "flower_yellow",
+    "transparent": true,
+    "nonSolid": true
+  },
+  {
+    "id": "tall_grass",
+    "name": "草",
+    "iconTex": "tall_grass",
+    "transparent": true,
+    "nonSolid": true
+  },
+  {
+    "id": "wheat",
+    "name": "小麦",
+    "iconTex": "wheat",
+    "transparent": true,
+    "nonSolid": true
+  }
+]

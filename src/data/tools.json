@@ -1,0 +1,81 @@
+{
+  "tiers": ["wood", "stone", "iron", "gold", "diamond"],
+  "tools": [
+    {
+      "id": "wooden_pickaxe",
+      "name": "木のつるはし",
+      "tier": "wood",
+      "type": "pickaxe",
+      "speedMultiplier": 2,
+      "durability": 60,
+      "recipe": { "planks": 3, "stick": 2 },
+      "iconTex": "wooden_pickaxe"
+    },
+    {
+      "id": "stone_pickaxe",
+      "name": "石のつるはし",
+      "tier": "stone",
+      "type": "pickaxe",
+      "speedMultiplier": 4,
+      "durability": 132,
+      "recipe": { "cobblestone": 3, "stick": 2 },
+      "iconTex": "stone_pickaxe"
+    },
+    {
+      "id": "iron_pickaxe",
+      "name": "鉄のつるはし",
+      "tier": "iron",
+      "type": "pickaxe",
+      "speedMultiplier": 6,
+      "durability": 251,
+      "recipe": { "iron_ingot": 3, "stick": 2 },
+      "iconTex": "iron_pickaxe"
+    },
+    {
+      "id": "diamond_pickaxe",
+      "name": "ダイヤのつるはし",
+      "tier": "diamond",
+      "type": "pickaxe",
+      "speedMultiplier": 8,
+      "durability": 1562,
+      "recipe": { "diamond": 3, "stick": 2 },
+      "iconTex": "diamond_pickaxe"
+    },
+    {
+      "id": "wooden_sword",
+      "name": "木の剣",
+      "tier": "wood",
+      "type": "sword",
+      "damage": 4,
+      "durability": 60,
+      "recipe": { "planks": 2, "stick": 1 },
+      "iconTex": "wooden_sword"
+    },
+    {
+      "id": "stone_sword",
+      "name": "石の剣",
+      "tier": "stone",
+      "type": "sword",
+      "damage": 5,
+      "durability": 132,
+      "recipe": { "cobblestone": 2, "stick": 1 },
+      "iconTex": "stone_sword"
+    },
+    {
+      "id": "wooden_shovel",
+      "name": "木のシャベル",
+      "tier": "wood",
+      "type": "shovel",
+      "speedMultiplier": 2,
+      "durability": 60,
+      "recipe": { "planks": 1, "stick": 2 },
+      "iconTex": "wooden_shovel"
+    }
+  ],
+  "miningTierRequired": {
+    "iron_ore": "stone",
+    "gold_ore": "iron",
+    "diamond_ore": "iron",
+    "obsidian": "diamond"
+  }
+}

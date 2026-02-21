@@ -1,0 +1,222 @@
+[
+  {
+    "id": "grass",
+    "name": "草",
+    "iconTex": "grass_side",
+    "faces": { "top": "grass_top", "bottom": "dirt", "sides": "grass_side" },
+    "transparent": false
+  },
+  { "id": "dirt", "name": "土", "iconTex": "dirt", "transparent": false },
+  {
+    "id": "wood",
+    "name": "原木",
+    "iconTex": "wood_side",
+    "faces": { "top": "wood_top", "bottom": "wood_top", "sides": "wood_side" },
+    "transparent": false
+  },
+  { "id": "leaves", "name": "葉", "iconTex": "leaves", "transparent": true },
+  { "id": "sand", "name": "砂", "iconTex": "sand", "transparent": false },
+  { "id": "stone", "name": "石", "iconTex": "stone", "transparent": false },
+  {
+    "id": "cobblestone",
+    "name": "丸石",
+    "iconTex": "cobblestone",
+    "transparent": false
+  },
+  {
+    "id": "coal_ore",
+    "name": "石炭鉱石",
+    "iconTex": "coal_ore",
+    "transparent": false
+  },
+  {
+    "id": "iron_ore",
+    "name": "鉄鉱石",
+    "iconTex": "iron_ore",
+    "transparent": false
+  },
+  {
+    "id": "gold_ore",
+    "name": "金鉱石",
+    "iconTex": "gold_ore",
+    "transparent": false
+  },
+  {
+    "id": "diamond_ore",
+    "name": "ダイヤ鉱石",
+    "iconTex": "diamond_ore",
+    "transparent": false
+  },
+  {
+    "id": "acacia_wood",
+    "name": "ｱｶｼｱ木",
+    "iconTex": "acacia_side",
+    "faces": {
+      "top": "acacia_top",
+      "bottom": "acacia_top",
+      "sides": "acacia_side"
+    },
+    "transparent": false
+  },
+  {
+    "id": "acacia_leaves",
+    "name": "ｱｶｼｱ葉",
+    "iconTex": "acacia_leaves",
+    "transparent": true
+  },
+  {
+    "id": "dry_grass",
+    "name": "枯草",
+    "iconTex": "dry_grass",
+    "faces": { "top": "dry_grass", "bottom": "dirt", "sides": "dry_grass" },
+    "transparent": false
+  },
+  { "id": "planks", "name": "板材", "iconTex": "planks", "transparent": false },
+  { "id": "glass", "name": "ガラス", "iconTex": "glass", "transparent": true },
+  { "id": "brick", "name": "レンガ", "iconTex": "brick", "transparent": false },
+  {
+    "id": "bookshelf",
+    "name": "本棚",
+    "iconTex": "bookshelf_side",
+    "faces": {
+      "top": "bookshelf_top",
+      "bottom": "bookshelf_top",
+      "sides": "bookshelf_side"
+    },
+    "transparent": false
+  },
+  {
+    "id": "obsidian",
+    "name": "黒曜石",
+    "iconTex": "obsidian",
+    "transparent": false
+  },
+  { "id": "snow", "name": "雪", "iconTex": "snow", "transparent": false },
+  { "id": "ice", "name": "氷", "iconTex": "ice", "transparent": true },
+  { "id": "water", "name": "水", "iconTex": "water", "transparent": true },
+  { "id": "lava", "name": "溶岩", "iconTex": "lava", "transparent": true },
+  { "id": "torch", "name": "松明", "iconTex": "torch", "transparent": true },
+  {
+    "id": "furnace",
+    "name": "かまど",
+    "iconTex": "furnace",
+    "faces": {
+      "top": "furnace_top",
+      "bottom": "cobblestone",
+      "sides": "furnace"
+    },
+    "transparent": false
+  },
+  {
+    "id": "chest",
+    "name": "チェスト",
+    "iconTex": "chest",
+    "faces": { "top": "chest_top", "bottom": "planks", "sides": "chest" },
+    "transparent": false
+  },
+  {
+    "id": "ladder",
+    "name": "はしご",
+    "iconTex": "ladder",
+    "transparent": true
+  },
+  { "id": "stick", "name": "棒", "iconTex": "stick", "transparent": false },
+  {
+    "id": "iron_ingot",
+    "name": "鉄インゴット",
+    "iconTex": "iron_ingot",
+    "transparent": false
+  },
+  {
+    "id": "gold_ingot",
+    "name": "金インゴット",
+    "iconTex": "gold_ingot",
+    "transparent": false
+  },
+  {
+    "id": "diamond",
+    "name": "ダイヤモンド",
+    "iconTex": "diamond",
+    "transparent": false
+  },
+  {
+    "id": "charcoal",
+    "name": "木炭",
+    "iconTex": "charcoal",
+    "transparent": false
+  },
+  {
+    "id": "flower_red",
+    "name": "赤い花",
+    "iconTex": "flower_red",
+    "transparent": true
+  },
+  {
+    "id": "flower_yellow",
+    "name": "黄色い花",
+    "iconTex": "flower_yellow",
+    "transparent": true
+  },
+  {
+    "id": "tall_grass",
+    "name": "草",
+    "iconTex": "tall_grass",
+    "transparent": true
+  },
+  { "id": "apple", "name": "りんご", "iconTex": "apple", "transparent": false },
+  { "id": "bread", "name": "パン", "iconTex": "bread", "transparent": false },
+  {
+    "id": "raw_meat",
+    "name": "生肉",
+    "iconTex": "raw_meat",
+    "transparent": false
+  },
+  {
+    "id": "cooked_meat",
+    "name": "焼肉",
+    "iconTex": "cooked_meat",
+    "transparent": false
+  },
+  {
+    "id": "wooden_pickaxe",
+    "name": "木のつるはし",
+    "iconTex": "wooden_pickaxe",
+    "transparent": false
+  },
+  {
+    "id": "stone_pickaxe",
+    "name": "石のつるはし",
+    "iconTex": "stone_pickaxe",
+    "transparent": false
+  },
+  {
+    "id": "iron_pickaxe",
+    "name": "鉄のつるはし",
+    "iconTex": "iron_pickaxe",
+    "transparent": false
+  },
+  {
+    "id": "diamond_pickaxe",
+    "name": "ダイヤのつるはし",
+    "iconTex": "diamond_pickaxe",
+    "transparent": false
+  },
+  {
+    "id": "wooden_sword",
+    "name": "木の剣",
+    "iconTex": "wooden_sword",
+    "transparent": false
+  },
+  {
+    "id": "stone_sword",
+    "name": "石の剣",
+    "iconTex": "stone_sword",
+    "transparent": false
+  },
+  {
+    "id": "wooden_shovel",
+    "name": "木のシャベル",
+    "iconTex": "wooden_shovel",
+    "transparent": false
+  }
+]

@@ -1,0 +1,268 @@
+/* インベントリ / クラフト画面 */
+#inventory-ui {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  max-height: 90vh;
+  background: var(--panel-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  z-index: 30;
+  flex-direction: column;
+  animation: UI_FadeIn_Center 0.3s ease-out forwards;
+}
+
+.inv-header {
+  padding: 20px 30px;
+  border-bottom: 1px solid var(--panel-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px 16px 0 0;
+}
+
+.inv-header h2 {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  letter-spacing: 2px;
+  font-size: 20px;
+}
+
+.close-hint {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.inv-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 25px;
+  gap: 30px;
+  overflow-y: auto;
+}
+
+.inv-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inv-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 13px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+/* D&D対応 アイテムグリッド */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 8px;
+  align-content: start;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.inv-item {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: grab;
+  transition: background 0.2s;
+}
+
+.inv-item:active {
+  cursor: grabbing;
+}
+.inv-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.inv-item.empty {
+  opacity: 0.5;
+  filter: grayscale(80%);
+}
+
+.inv-item-icon {
+  width: 32px;
+  height: 32px;
+  background-size: cover;
+  image-rendering: pixelated;
+  margin-bottom: 4px;
+  pointer-events: none;
+}
+
+.inv-item-name {
+  font-size: 10px;
+  color: var(--text-sub);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.inv-item-count {
+  position: absolute;
+  bottom: 20px;
+  right: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000;
+  pointer-events: none;
+}
+
+/* D&D対応 ホットバー設定エリア */
+.hotbar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.hotbar-slot-ui {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  height: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.hotbar-slot-ui.drag-over {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.hotbar-slot-ui .slot-key {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* レシピリスト */
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.recipe {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.recipe:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.recipe-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.recipe-icon {
+  width: 36px;
+  height: 36px;
+  image-rendering: pixelated;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+.recipe-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.recipe-yield {
+  color: var(--text-sub);
+  font-size: 11px;
+}
+.recipe-reqs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.req-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.req-icon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+}
+.req-item.short {
+  color: #ff5252;
+}
+.req-item.ok {
+  color: #4caf50;
+}
+
+.craft-btn {
+  padding: 8px 14px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
+}
+
+.craft-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+}
+
+.craft-btn:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-sub);
+  cursor: not-allowed;
+  box-shadow: none;
+}

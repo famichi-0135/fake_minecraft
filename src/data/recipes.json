@@ -1,0 +1,70 @@
+[
+  {
+    "ingredients": { "cobblestone": 2 },
+    "result": { "id": "stone", "count": 1 }
+  },
+  { "ingredients": { "sand": 2 }, "result": { "id": "glass", "count": 1 } },
+  { "ingredients": { "dirt": 2 }, "result": { "id": "brick", "count": 1 } },
+  { "ingredients": { "wood": 1 }, "result": { "id": "planks", "count": 4 } },
+  {
+    "ingredients": { "acacia_wood": 1 },
+    "result": { "id": "planks", "count": 4 }
+  },
+  {
+    "ingredients": { "planks": 3, "leaves": 1 },
+    "result": { "id": "bookshelf", "count": 1 }
+  },
+  {
+    "ingredients": { "dirt": 2, "leaves": 1 },
+    "result": { "id": "grass", "count": 1 }
+  },
+  { "ingredients": { "snow": 2 }, "result": { "id": "ice", "count": 1 } },
+  {
+    "ingredients": { "stone": 4, "coal_ore": 1 },
+    "result": { "id": "obsidian", "count": 1 }
+  },
+  { "ingredients": { "planks": 2 }, "result": { "id": "stick", "count": 4 } },
+  {
+    "ingredients": { "cobblestone": 8 },
+    "result": { "id": "furnace", "count": 1 }
+  },
+  { "ingredients": { "planks": 8 }, "result": { "id": "chest", "count": 1 } },
+  { "ingredients": { "stick": 7 }, "result": { "id": "ladder", "count": 3 } },
+  {
+    "ingredients": { "stick": 1, "coal_ore": 1 },
+    "result": { "id": "torch", "count": 4 }
+  },
+  {
+    "ingredients": { "stick": 1, "charcoal": 1 },
+    "result": { "id": "torch", "count": 4 }
+  },
+  {
+    "ingredients": { "planks": 3, "stick": 2 },
+    "result": { "id": "wooden_pickaxe", "count": 1 }
+  },
+  {
+    "ingredients": { "cobblestone": 3, "stick": 2 },
+    "result": { "id": "stone_pickaxe", "count": 1 }
+  },
+  {
+    "ingredients": { "iron_ingot": 3, "stick": 2 },
+    "result": { "id": "iron_pickaxe", "count": 1 }
+  },
+  {
+    "ingredients": { "diamond": 3, "stick": 2 },
+    "result": { "id": "diamond_pickaxe", "count": 1 }
+  },
+  {
+    "ingredients": { "planks": 2, "stick": 1 },
+    "result": { "id": "wooden_sword", "count": 1 }
+  },
+  {
+    "ingredients": { "cobblestone": 2, "stick": 1 },
+    "result": { "id": "stone_sword", "count": 1 }
+  },
+  {
+    "ingredients": { "planks": 1, "stick": 2 },
+    "result": { "id": "wooden_shovel", "count": 1 }
+  },
+  { "ingredients": { "planks": 3 }, "result": { "id": "bread", "count": 1 } }
+]

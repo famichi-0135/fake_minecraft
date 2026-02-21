@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SURVIVAL VOXEL</title>
+    <meta
+      name="description"
+      content="ブラウザで遊べるサバイバルボクセルゲーム"
+    />
+  </head>
+  <body>
+    <!-- ゲーム描画キャンバス -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- クロスヘア -->
+    <div id="crosshair"></div>
+
+    <!-- ホットバー -->
+    <div id="toolbar"></div>
+
+    <!-- ポーズ画面 -->
+    <div id="blocker">
+      <div id="instructions">
+        <h1 class="game-title">SURVIVAL VOXEL</h1>
+        <p class="subtitle">BROWSER SANDBOX</p>
+        <div class="controls-grid">
+          <div class="control-item">
+            <span>移動</span>
+            <div class="key-group">
+              <span class="key">W</span><span class="key">A</span
+              ><span class="key">S</span><span class="key">D</span>
+            </div>
+          </div>
+          <div class="control-item">
+            <span>ジャンプ</span>
+            <div class="key-group"><span class="key">SPACE</span></div>
+          </div>
+          <div class="control-item">
+            <span>走る</span>
+            <div class="key-group"><span class="key">SHIFT</span></div>
+          </div>
+          <div class="control-item">
+            <span>破壊</span>
+            <div class="key-group"><span class="key">左クリック</span></div>
+          </div>
+          <div class="control-item">
+            <span>設置</span>
+            <div class="key-group"><span class="key">右クリック</span></div>
+          </div>
+          <div class="control-item">
+            <span>インベントリ</span>
+            <div class="key-group"><span class="key">E</span></div>
+          </div>
+          <div class="control-item">
+            <span>スロット切替</span>
+            <div class="key-group">
+              <span class="key">1</span>~<span class="key">0</span>
+            </div>
+          </div>
+          <div class="control-item">
+            <span>ホイール</span>
+            <div class="key-group"><span class="key">スクロール</span></div>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-bottom: 12px">
+          ▶ クリックしてスタート
+        </button>
+        <br />
+        <button id="reset-btn" class="btn-primary">🗑 ワールドリセット</button>
+      </div>
+    </div>
+
+    <!-- インベントリ / クラフト画面 -->
+    <div id="inventory-ui">
+      <div class="inv-header">
+        <h2>INVENTORY & CRAFTING</h2>
+        <span class="close-hint">[E] でとじる</span>
+      </div>
+      <div class="inv-body">
+        <div class="inv-left">
+          <div class="inv-section">
+            <h3>所持アイテム</h3>
+            <div class="inventory-grid"></div>
+          </div>
+          <div class="inv-section">
+            <h3>ホットバー設定 (ドラッグ &amp; ドロップ)</h3>
+            <div class="hotbar-grid"></div>
+          </div>
+        </div>
+        <div class="inv-section">
+          <h3>クラフト</h3>
+          <div class="recipe-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESM エントリポイント -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

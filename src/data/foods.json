@@ -1,0 +1,6 @@
+[
+  { "id": "apple", "name": "りんご", "hunger": 4, "iconTex": "apple" },
+  { "id": "bread", "name": "パン", "hunger": 8, "iconTex": "bread" },
+  { "id": "raw_meat", "name": "生肉", "hunger": 3, "iconTex": "raw_meat" },
+  { "id": "cooked_meat", "name": "焼肉", "hunger": 8, "iconTex": "cooked_meat" }
+]
