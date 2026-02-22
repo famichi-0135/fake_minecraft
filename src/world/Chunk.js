@@ -20,8 +20,8 @@ export class Chunk {
     this.materialFactory = materialFactory;
     this.blockRegistry = blockRegistry;
 
-    /** @type {Map<string, string>} ブロックキー → ブロックタイプ */
-    this.blockData = new Map();
+    /** @type {Uint8Array} 1次元配列によるブロックデータ (256 * 16 * 16 = 65536 byte) */
+    this.blockData = new Uint8Array(256 * CHUNK_SIZE * CHUNK_SIZE);
 
     /** @type {THREE.Mesh|null} チャンク全体を1つに統合したメッシュ */
     this.mesh = null;
@@ -37,6 +37,26 @@ export class Chunk {
   }
 
   /**
+   * ローカル座標から Uint8Array のインデックスを計算する
+   * @param {number} lx チャンク内ローカル X(0~15)
+   * @param {number} ly チャンク内ローカル Y(0~255)
+   * @param {number} lz チャンク内ローカル Z(0~15)
+   * @returns {number} インデックス (-1: 範囲外)
+   */
+  getIndex(lx, ly, lz) {
+    if (
+      ly < 0 ||
+      ly >= 256 ||
+      lx < 0 ||
+      lx >= CHUNK_SIZE ||
+      lz < 0 ||
+      lz >= CHUNK_SIZE
+    )
+      return -1;
+    return ly * CHUNK_SIZE * CHUNK_SIZE + lz * CHUNK_SIZE + lx;
+  }
+
+  /**
    * ブロックデータをセット（modifiedBlocks でオーバーライド対応）
    * @param {number} bx
    * @param {number} by
@@ -49,11 +69,19 @@ export class Chunk {
     if (modifiedBlocks[key] !== undefined) {
       type = modifiedBlocks[key];
     }
-    if (type !== "air") {
-      this.blockData.set(key, type);
-      if (by > this.maxY) this.maxY = by;
-    } else {
-      this.blockData.delete(key);
+
+    const lx = bx - this.startX;
+    const lz = bz - this.startZ;
+    const ly = by - BOTTOM_Y;
+    const idx = this.getIndex(lx, ly, lz);
+
+    if (idx !== -1) {
+      if (type !== "air") {
+        this.blockData[idx] = this.blockRegistry.getBlockIntId(type);
+        if (by > this.maxY) this.maxY = by;
+      } else {
+        this.blockData[idx] = 0;
+      }
     }
   }
 
@@ -71,11 +99,18 @@ export class Chunk {
         bz < this.startZ + CHUNK_SIZE
       ) {
         const type = modifiedBlocks[bKey];
-        if (type !== "air") {
-          this.blockData.set(bKey, type);
-          if (by > this.maxY) this.maxY = by;
-        } else {
-          this.blockData.delete(bKey);
+        const lx = bx - this.startX;
+        const lz = bz - this.startZ;
+        const ly = by - BOTTOM_Y;
+        const idx = this.getIndex(lx, ly, lz);
+
+        if (idx !== -1) {
+          if (type !== "air") {
+            this.blockData[idx] = this.blockRegistry.getBlockIntId(type);
+            if (by > this.maxY) this.maxY = by;
+          } else {
+            this.blockData[idx] = 0;
+          }
         }
       }
     }
@@ -88,7 +123,7 @@ export class Chunk {
   buildMeshes(scene) {
     this.dispose(scene);
 
-    if (this.blockData.size === 0) return;
+    if (this.maxY === -Infinity) return;
 
     const builder = new ChunkMeshBuilder(
       this,

@@ -59,6 +59,108 @@
   gap: 20px;
 }
 
+/* コントロール群 (タブ・検索・ページ用) */
+.inv-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 5px;
+}
+
+.inv-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.inv-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.inv-tab-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.inv-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.inv-tab-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.inv-search-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  width: 150px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.inv-search-box:focus {
+  border-color: var(--accent);
+}
+
+.inv-pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pager-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.pager-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pager-btn:not(:disabled):hover {
+  background: var(--accent);
+}
+
+.pager-info {
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  min-width: 40px;
+  text-align: center;
+}
+
 .inv-section h3 {
   margin: 0 0 15px 0;
   font-size: 13px;

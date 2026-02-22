@@ -3,49 +3,185 @@
     "id": "grass",
     "name": "草",
     "iconTex": "grass_side",
-    "faces": { "top": "grass_top", "bottom": "dirt", "sides": "grass_side" },
-    "transparent": false
+    "faces": {
+      "top": "grass_top",
+      "bottom": "dirt",
+      "sides": "grass_side"
+    },
+    "transparent": false,
+    "category": "building",
+    "hardness": 0.5,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
-  { "id": "dirt", "name": "土", "iconTex": "dirt", "transparent": false },
+  {
+    "id": "dirt",
+    "name": "土",
+    "iconTex": "dirt",
+    "transparent": false,
+    "category": "building",
+    "hardness": 0.5,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
   {
     "id": "wood",
     "name": "原木",
     "iconTex": "wood_side",
-    "faces": { "top": "wood_top", "bottom": "wood_top", "sides": "wood_side" },
-    "transparent": false
+    "faces": {
+      "top": "wood_top",
+      "bottom": "wood_top",
+      "sides": "wood_side"
+    },
+    "transparent": false,
+    "category": "building",
+    "hardness": 2,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
-  { "id": "leaves", "name": "葉", "iconTex": "leaves", "transparent": true },
-  { "id": "sand", "name": "砂", "iconTex": "sand", "transparent": false },
-  { "id": "stone", "name": "石", "iconTex": "stone", "transparent": false },
+  {
+    "id": "leaves",
+    "name": "葉",
+    "iconTex": "leaves",
+    "transparent": true,
+    "category": "nature",
+    "hardness": 0.2,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "sand",
+    "name": "砂",
+    "iconTex": "sand",
+    "transparent": false,
+    "category": "building",
+    "hardness": 0.5,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "stone",
+    "name": "石",
+    "iconTex": "stone",
+    "transparent": false,
+    "category": "building",
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
+  },
   {
     "id": "cobblestone",
     "name": "丸石",
     "iconTex": "cobblestone",
-    "transparent": false
+    "transparent": false,
+    "category": "building",
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "cobblestone_slab",
+    "name": "丸石のハーフブロック",
+    "iconTex": "cobblestone",
+    "transparent": true,
+    "category": "building",
+    "model": "slab",
+    "faces": {
+      "top": "cobblestone",
+      "bottom": "cobblestone",
+      "sides": "cobblestone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "cobblestone_stairs",
+    "name": "丸石の階段",
+    "iconTex": "cobblestone",
+    "transparent": true,
+    "category": "building",
+    "model": "stair",
+    "faces": {
+      "top": "cobblestone",
+      "bottom": "cobblestone",
+      "sides": "cobblestone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "cobblestone_slab",
+    "name": "丸石のハーフブロック",
+    "iconTex": "cobblestone",
+    "transparent": true,
+    "category": "building",
+    "model": "slab",
+    "faces": {
+      "top": "cobblestone",
+      "bottom": "cobblestone",
+      "sides": "cobblestone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "cobblestone_stairs",
+    "name": "丸石の階段",
+    "iconTex": "cobblestone",
+    "transparent": true,
+    "category": "building",
+    "model": "stair",
+    "faces": {
+      "top": "cobblestone",
+      "bottom": "cobblestone",
+      "sides": "cobblestone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
   },
   {
     "id": "coal_ore",
     "name": "石炭鉱石",
     "iconTex": "coal_ore",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
   },
   {
     "id": "iron_ore",
     "name": "鉄鉱石",
     "iconTex": "iron_ore",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 1
   },
   {
     "id": "gold_ore",
     "name": "金鉱石",
     "iconTex": "gold_ore",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 2
   },
   {
     "id": "diamond_ore",
     "name": "ダイヤ鉱石",
     "iconTex": "diamond_ore",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 2
   },
   {
     "id": "acacia_wood",
@@ -56,24 +192,131 @@
       "bottom": "acacia_top",
       "sides": "acacia_side"
     },
-    "transparent": false
+    "transparent": false,
+    "category": "building",
+    "hardness": 2,
+    "requiredTool": "axe",
+    "requiredToolLevel": 0
   },
   {
     "id": "acacia_leaves",
     "name": "ｱｶｼｱ葉",
     "iconTex": "acacia_leaves",
-    "transparent": true
+    "transparent": true,
+    "category": "nature",
+    "hardness": 0.2,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "dry_grass",
     "name": "枯草",
     "iconTex": "dry_grass",
-    "faces": { "top": "dry_grass", "bottom": "dirt", "sides": "dry_grass" },
-    "transparent": false
+    "faces": {
+      "top": "dry_grass",
+      "bottom": "dirt",
+      "sides": "dry_grass"
+    },
+    "transparent": false,
+    "category": "nature",
+    "hardness": 0.5,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
-  { "id": "planks", "name": "板材", "iconTex": "planks", "transparent": false },
-  { "id": "glass", "name": "ガラス", "iconTex": "glass", "transparent": true },
-  { "id": "brick", "name": "レンガ", "iconTex": "brick", "transparent": false },
+  {
+    "id": "planks",
+    "name": "板材",
+    "iconTex": "planks",
+    "transparent": false,
+    "category": "building",
+    "hardness": 2,
+    "requiredTool": "axe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "oak_slab",
+    "name": "木のハーフブロック",
+    "iconTex": "planks",
+    "transparent": true,
+    "category": "building",
+    "model": "slab",
+    "faces": {
+      "top": "planks",
+      "bottom": "planks",
+      "sides": "planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "oak_stairs",
+    "name": "木の階段",
+    "iconTex": "planks",
+    "transparent": true,
+    "category": "building",
+    "model": "stair",
+    "faces": {
+      "top": "planks",
+      "bottom": "planks",
+      "sides": "planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "oak_slab",
+    "name": "木のハーフブロック",
+    "iconTex": "planks",
+    "transparent": true,
+    "category": "building",
+    "model": "slab",
+    "faces": {
+      "top": "planks",
+      "bottom": "planks",
+      "sides": "planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "oak_stairs",
+    "name": "木の階段",
+    "iconTex": "planks",
+    "transparent": true,
+    "category": "building",
+    "model": "stair",
+    "faces": {
+      "top": "planks",
+      "bottom": "planks",
+      "sides": "planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "glass",
+    "name": "ガラス",
+    "iconTex": "glass",
+    "transparent": true,
+    "category": "building",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "brick",
+    "name": "レンガ",
+    "iconTex": "brick",
+    "transparent": false,
+    "category": "building",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
   {
     "id": "bookshelf",
     "name": "本棚",
@@ -83,24 +326,72 @@
       "bottom": "bookshelf_top",
       "sides": "bookshelf_side"
     },
-    "transparent": false
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "obsidian",
     "name": "黒曜石",
     "iconTex": "obsidian",
-    "transparent": false
+    "transparent": false,
+    "category": "building",
+    "hardness": 10,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 3
   },
-  { "id": "snow", "name": "雪", "iconTex": "snow", "transparent": false },
-  { "id": "ice", "name": "氷", "iconTex": "ice", "transparent": true },
-  { "id": "water", "name": "水", "iconTex": "water", "transparent": true },
-  { "id": "lava", "name": "溶岩", "iconTex": "lava", "transparent": true },
+  {
+    "id": "snow",
+    "name": "雪",
+    "iconTex": "snow",
+    "transparent": false,
+    "category": "building",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "ice",
+    "name": "氷",
+    "iconTex": "ice",
+    "transparent": true,
+    "category": "building",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "water",
+    "name": "水",
+    "iconTex": "water",
+    "transparent": true,
+    "category": "nature",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "lava",
+    "name": "溶岩",
+    "iconTex": "lava",
+    "transparent": true,
+    "category": "nature",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
   {
     "id": "torch",
     "name": "松明",
     "iconTex": "torch",
     "transparent": true,
-    "model": "cross"
+    "model": "cross",
+    "category": "misc",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "furnace",
@@ -111,121 +402,289 @@
       "bottom": "cobblestone",
       "sides": "furnace"
     },
-    "transparent": false
+    "transparent": false,
+    "category": "misc",
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "requiredToolLevel": 0
   },
   {
     "id": "chest",
     "name": "チェスト",
     "iconTex": "chest",
-    "faces": { "top": "chest_top", "bottom": "planks", "sides": "chest" },
-    "transparent": false
+    "faces": {
+      "top": "chest_top",
+      "bottom": "planks",
+      "sides": "chest"
+    },
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "ladder",
     "name": "はしご",
     "iconTex": "ladder",
-    "transparent": true
+    "transparent": true,
+    "category": "misc",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
-  { "id": "stick", "name": "棒", "iconTex": "stick", "transparent": false },
+  {
+    "id": "stick",
+    "name": "棒",
+    "iconTex": "stick",
+    "transparent": false,
+    "category": "materials",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
   {
     "id": "iron_ingot",
     "name": "鉄インゴット",
     "iconTex": "iron_ingot",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "gold_ingot",
     "name": "金インゴット",
     "iconTex": "gold_ingot",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "diamond",
     "name": "ダイヤモンド",
     "iconTex": "diamond",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "charcoal",
     "name": "木炭",
     "iconTex": "charcoal",
-    "transparent": false
+    "transparent": false,
+    "category": "materials",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "flower_red",
     "name": "赤い花",
     "iconTex": "flower_red",
     "transparent": true,
-    "model": "cross"
+    "model": "cross",
+    "category": "nature",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "flower_yellow",
     "name": "黄色い花",
     "iconTex": "flower_yellow",
     "transparent": true,
-    "model": "cross"
+    "model": "cross",
+    "category": "nature",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "tall_grass",
     "name": "草",
     "iconTex": "tall_grass",
     "transparent": true,
-    "model": "cross"
+    "model": "cross",
+    "category": "nature",
+    "hardness": 0,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
-  { "id": "apple", "name": "りんご", "iconTex": "apple", "transparent": false },
-  { "id": "bread", "name": "パン", "iconTex": "bread", "transparent": false },
+  {
+    "id": "apple",
+    "name": "りんご",
+    "iconTex": "apple",
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "bread",
+    "name": "パン",
+    "iconTex": "bread",
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
   {
     "id": "raw_meat",
     "name": "生肉",
     "iconTex": "raw_meat",
-    "transparent": false
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "cooked_meat",
     "name": "焼肉",
     "iconTex": "cooked_meat",
-    "transparent": false
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "zombie_meat",
+    "name": "ゾンビ肉",
+    "iconTex": "zombie_meat",
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
   },
   {
     "id": "wooden_pickaxe",
     "name": "木のつるはし",
     "iconTex": "wooden_pickaxe",
-    "transparent": false
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "pickaxe",
+    "toolLevel": 0,
+    "miningSpeed": 2
   },
   {
     "id": "stone_pickaxe",
     "name": "石のつるはし",
     "iconTex": "stone_pickaxe",
-    "transparent": false
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "pickaxe",
+    "toolLevel": 1,
+    "miningSpeed": 4
   },
   {
     "id": "iron_pickaxe",
     "name": "鉄のつるはし",
     "iconTex": "iron_pickaxe",
-    "transparent": false
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "pickaxe",
+    "toolLevel": 2,
+    "miningSpeed": 6
   },
   {
     "id": "diamond_pickaxe",
     "name": "ダイヤのつるはし",
     "iconTex": "diamond_pickaxe",
-    "transparent": false
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "pickaxe",
+    "toolLevel": 3,
+    "miningSpeed": 8
   },
   {
     "id": "wooden_sword",
     "name": "木の剣",
     "iconTex": "wooden_sword",
-    "transparent": false
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "sword",
+    "toolLevel": 0,
+    "damage": 4
   },
   {
     "id": "stone_sword",
     "name": "石の剣",
     "iconTex": "stone_sword",
-    "transparent": false
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "sword",
+    "toolLevel": 1,
+    "damage": 5
   },
   {
     "id": "wooden_shovel",
     "name": "木のシャベル",
     "iconTex": "wooden_shovel",
-    "transparent": false
+    "transparent": false,
+    "category": "misc",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0
+  },
+  {
+    "id": "gold_pickaxe",
+    "name": "金のつるはし",
+    "iconTex": "gold_pickaxe",
+    "transparent": false,
+    "category": "tools",
+    "hardness": 1,
+    "requiredTool": null,
+    "requiredToolLevel": 0,
+    "toolType": "pickaxe",
+    "toolLevel": 3,
+    "miningSpeed": 12
+  },
+  {
+    "id": "iron_sword",
+    "name": "鉄の剣",
+    "iconTex": "iron_sword",
+    "transparent": false,
+    "category": "tools",
+    "toolType": "sword",
+    "toolLevel": 2,
+    "damage": 6
+  },
+  {
+    "id": "diamond_sword",
+    "name": "ダイヤの剣",
+    "iconTex": "diamond_sword",
+    "transparent": false,
+    "category": "tools",
+    "toolType": "sword",
+    "toolLevel": 3,
+    "damage": 7
   }
 ]

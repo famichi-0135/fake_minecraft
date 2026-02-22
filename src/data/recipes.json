@@ -66,5 +66,49 @@
     "ingredients": { "planks": 1, "stick": 2 },
     "result": { "id": "wooden_shovel", "count": 1 }
   },
-  { "ingredients": { "planks": 3 }, "result": { "id": "bread", "count": 1 } }
+  { "ingredients": { "planks": 3 }, "result": { "id": "bread", "count": 1 } },
+  {
+    "ingredients": { "planks": 3 },
+    "result": { "id": "oak_slab", "count": 6 }
+  },
+  {
+    "ingredients": { "planks": 6 },
+    "result": { "id": "oak_stairs", "count": 4 }
+  },
+  {
+    "ingredients": { "cobblestone": 3 },
+    "result": { "id": "cobblestone_slab", "count": 6 }
+  },
+  {
+    "ingredients": { "cobblestone": 6 },
+    "result": { "id": "cobblestone_stairs", "count": 4 }
+  },
+  {
+    "ingredients": { "iron_ingot": 2, "stick": 1 },
+    "result": { "id": "iron_sword", "count": 1 }
+  },
+  {
+    "ingredients": { "diamond": 2, "stick": 1 },
+    "result": { "id": "diamond_sword", "count": 1 }
+  },
+  {
+    "ingredients": { "gold_ingot": 3, "stick": 2 },
+    "result": { "id": "gold_pickaxe", "count": 1 }
+  },
+  {
+    "ingredients": { "iron_ore": 1, "coal": 1 },
+    "result": { "id": "iron_ingot", "count": 1 }
+  },
+  {
+    "ingredients": { "gold_ore": 1, "coal": 1 },
+    "result": { "id": "gold_ingot", "count": 1 }
+  },
+  {
+    "ingredients": { "wood": 1, "coal": 1 },
+    "result": { "id": "charcoal", "count": 1 }
+  },
+  {
+    "ingredients": { "raw_meat": 1, "coal": 1 },
+    "result": { "id": "cooked_meat", "count": 1 }
+  }
 ]

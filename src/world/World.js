@@ -137,9 +137,9 @@ export class World {
         // チェビシェフ距離でLODを判定
         const dist = Math.max(Math.abs(x), Math.abs(z));
         let lod = 0;
-        if (dist > 6)
+        if (dist > 14)
           lod = 2; // 遠景 (低詳細)
-        else if (dist > 3) lod = 1; // 中景 (中詳細)
+        else if (dist > 8) lod = 1; // 中景 (中詳細)
 
         neededChunks.set(`${playerChunkX + x},${playerChunkZ + z}`, lod);
       }
@@ -314,8 +314,8 @@ export class World {
       if (idx !== -1) {
         chunk.blockData[idx] = 0; // air
       }
-      // チャンク再構築
-      this._rebuildChunkAsync(chunk, 0); // 近景なので LOD 0
+      // チャンク再構築 (メインスレッドで即座に反映)
+      this._rebuildChunkSync(chunk);
 
       // 隣接したチャンクの境界ブロックだった場合、隣のチャンクも再構築が必要
       this._rebuildNeighborChunksIfNeeded(pos.x, pos.z, cx, cz);
@@ -375,8 +375,8 @@ export class World {
         chunk.blockData[idx] = this.blockRegistry.getBlockIntId(blockType);
       }
       if (voxelPos.y > chunk.maxY) chunk.maxY = voxelPos.y;
-      // チャンク再構築
-      this._rebuildChunkAsync(chunk, 0); // 近景のため LOD 0
+      // チャンク再構築 (メインスレッドで即座に反映)
+      this._rebuildChunkSync(chunk);
 
       // 隣接チャンクの再構築判定
       this._rebuildNeighborChunksIfNeeded(voxelPos.x, voxelPos.z, cx, cz);
@@ -406,11 +406,20 @@ export class World {
   _rebuildChunkSafe(cx, cz) {
     const chunk = this.chunks.get(`${cx},${cz}`);
     if (chunk) {
-      this._rebuildChunkAsync(chunk, chunk.lod);
+      this._rebuildChunkSync(chunk);
     }
   }
 
   // --- 内部 ---
+
+  /**
+   * メインスレッドで瞬時にチャンクメッシュを再構築する
+   * ブロックの手動設置・破壊などで用いる
+   * @param {Chunk} chunk
+   */
+  _rebuildChunkSync(chunk) {
+    chunk.buildMeshes(this.scene);
+  }
 
   _generateChunkAsync(cx, cz, lod) {
     // 仮のチャンクオブジェクト（あとでWorkerから受け取ったデータをセットする）

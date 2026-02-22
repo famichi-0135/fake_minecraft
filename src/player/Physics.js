@@ -33,24 +33,105 @@ export class Physics {
     "ladder",
   ]);
 
-  checkCollision(px, py, pz) {
-    const hw = PLAYER_HALF_WIDTH;
-    const minX = Math.floor(px - hw + 0.5);
-    const maxX = Math.floor(px + hw + 0.5);
-    const minY = Math.floor(py - PLAYER_HEIGHT + 0.5);
-    const maxY = Math.floor(py + PLAYER_HEAD_MARGIN + 0.5);
-    const minZ = Math.floor(pz - hw + 0.5);
-    const maxZ = Math.floor(pz + hw + 0.5);
+  /**
+   * 指定したAABBが地形と衝突するかを判定する (エンティティ全般用)
+   * @param {number} x - 中心X
+   * @param {number} y - 基準Y (足元や目線など)
+   * @param {number} z - 中心Z
+   * @param {number} halfWidth - 幅の半分 (X, Z方向)
+   * @param {number} heightDown - 下方向の高さ (基準Yから足下まで)
+   * @param {number} heightUp - 上方向の高さ (基準Yから頭頂まで)
+   * @returns {boolean}
+   */
+  checkAABBCollision(x, y, z, halfWidth, heightDown, heightUp) {
+    const minX = Math.floor(x - halfWidth + 0.5);
+    const maxX = Math.floor(x + halfWidth + 0.5);
+    const minY = Math.floor(y - heightDown + 0.5);
+    const maxY = Math.floor(y + heightUp + 0.5);
+    const minZ = Math.floor(z - halfWidth + 0.5);
+    const maxZ = Math.floor(z + halfWidth + 0.5);
 
-    for (let x = minX; x <= maxX; x++) {
-      for (let y = minY; y <= maxY; y++) {
-        for (let z = minZ; z <= maxZ; z++) {
-          const type = this.world.getSolidBlockType(x, y, z);
-          if (type && !Physics.NON_SOLID.has(type)) return true;
+    const eMinX = x - halfWidth;
+    const eMaxX = x + halfWidth;
+    const eMinY = y - heightDown;
+    const eMaxY = y + heightUp;
+    const eMinZ = z - halfWidth;
+    const eMaxZ = z + halfWidth;
+
+    for (let bx = minX; bx <= maxX; bx++) {
+      for (let by = minY; by <= maxY; by++) {
+        for (let bz = minZ; bz <= maxZ; bz++) {
+          const type = this.world.getSolidBlockType(bx, by, bz);
+          if (type && !Physics.NON_SOLID.has(type)) {
+            let bMinX = bx - 0.5;
+            let bMaxX = bx + 0.5;
+            let bMinY = by - 0.5;
+            let bMaxY = by + 0.5;
+            let bMinZ = bz - 0.5;
+            let bMaxZ = bz + 0.5;
+
+            // 特殊形状ブロックのAABB調整
+            const blockDef = this.world.blockRegistry.get(type);
+            if (blockDef) {
+              if (blockDef.model === "slab") {
+                bMaxY = by; // ハーフブロックは高さ半分
+              } else if (blockDef.model === "stair") {
+                // 階段（向き固定：+Z方向へ登るよう、-Z側に上段があると仮定）
+                const lowerHit =
+                  eMinX < bMaxX &&
+                  eMaxX > bMinX &&
+                  eMinY < by &&
+                  eMaxY > bMinY &&
+                  eMinZ < bMaxZ &&
+                  eMaxZ > bMinZ;
+
+                const upperHit =
+                  eMinX < bMaxX &&
+                  eMaxX > bMinX &&
+                  eMinY < bMaxY &&
+                  eMaxY > by &&
+                  eMinZ < bz &&
+                  eMaxZ > bMinZ; // Zが bz より小さい側（半分）
+
+                if (lowerHit || upperHit) return true;
+                continue; // 個別に判定したため以降のデフォルト判定をスキップ
+              }
+            }
+
+            // AABB同士の交差判定 (フルブロック・ハーフブロック用)
+            if (
+              eMinX < bMaxX &&
+              eMaxX > bMinX &&
+              eMinY < bMaxY &&
+              eMaxY > bMinY &&
+              eMinZ < bMaxZ &&
+              eMaxZ > bMinZ
+            ) {
+              return true;
+            }
+          }
         }
       }
     }
     return false;
+  }
+
+  /**
+   * プレイヤー用の衝突判定 (従来のメソッド互換)
+   * @param {number} px - プレイヤーX
+   * @param {number} py - プレイヤーY (カメラ位置 = 目の高さ)
+   * @param {number} pz - プレイヤーZ
+   * @returns {boolean}
+   */
+  checkCollision(px, py, pz) {
+    return this.checkAABBCollision(
+      px,
+      py,
+      pz,
+      PLAYER_HALF_WIDTH,
+      PLAYER_HEIGHT,
+      PLAYER_HEAD_MARGIN,
+    );
   }
 
   /**

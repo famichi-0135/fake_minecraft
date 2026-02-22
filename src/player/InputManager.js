@@ -150,6 +150,7 @@ export class InputManager {
   _onMouseUp(event) {
     if (event.button === 0) {
       this.isLeftMouseDown = false;
+      EventBus.emit("input:attack-stop");
     } else if (event.button === 2) {
       this.isRightMouseDown = false;
     }

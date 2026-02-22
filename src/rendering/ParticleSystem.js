@@ -14,6 +14,10 @@ export class ParticleSystem {
     EventBus.on("block:destroyed", ({ pos, type }) => {
       this.spawnBlockBreak(pos, type);
     });
+
+    EventBus.on("entity:damaged", ({ pos }) => {
+      this.spawnDamageParticle(pos);
+    });
   }
 
   /**
@@ -55,6 +59,39 @@ export class ParticleSystem {
           (Math.random() - 0.5) * 4,
         ),
         life: 0.6 + Math.random() * 0.4,
+      });
+    }
+  }
+
+  /**
+   * ダメージ発生時のパーティクル
+   */
+  spawnDamageParticle(pos) {
+    const count = 10;
+    for (let i = 0; i < count; i++) {
+      if (this.particles.length >= this.maxParticles) break;
+
+      // 小さな赤いブロック（血しぶきやヒットエフェクト風）
+      const geo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+      const mat = new THREE.MeshBasicMaterial({ color: 0xff3333 });
+      const mesh = new THREE.Mesh(geo, mat);
+
+      // モブの胴体付近(Y+1.0前後)から放出されるようにする
+      mesh.position.set(
+        pos.x + (Math.random() - 0.5) * 0.8,
+        pos.y + 1.0 + (Math.random() - 0.5) * 0.8,
+        pos.z + (Math.random() - 0.5) * 0.8,
+      );
+      this.scene.add(mesh);
+
+      this.particles.push({
+        mesh,
+        vel: new THREE.Vector3(
+          (Math.random() - 0.5) * 8,
+          Math.random() * 5 + 3, // 上方向へ跳ねる
+          (Math.random() - 0.5) * 8,
+        ),
+        life: 0.3 + Math.random() * 0.2, // すぐ消える（0.3~0.5秒）
       });
     }
   }

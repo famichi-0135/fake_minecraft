@@ -1,6 +1,6 @@
 // ワールド生成定数
 export const CHUNK_SIZE = 16;
-export const RENDER_DISTANCE = 18;
+export const RENDER_DISTANCE = 24;
 export const WATER_LEVEL = 0;
 export const BOTTOM_Y = -50;
 

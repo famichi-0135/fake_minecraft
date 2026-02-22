@@ -81,21 +81,19 @@ export class TerrainGenerator {
     return { surface, sub };
   }
 
-  /**
-   * 鉱石タイプを判定（石の層のみ）
-   * @param {number} x - X座標
-   * @param {number} y - Y座標
-   * @param {number} z - Z座標
-   * @returns {string|null} 鉱石ブロックID、or null (石のまま)
-   */
   getOreType(x, y, z) {
-    // 座標ベースの決定論的乱数（同じ座標は常に同じ結果）
     const n = Math.sin(x * 12.9898 + y * 37.719 + z * 78.233) * 43758.5453;
     const r = n - Math.floor(n);
-    if (y < BOTTOM_Y + 15 && r < 0.002) return "diamond_ore";
-    if (y < BOTTOM_Y + 30 && r < 0.005) return "gold_ore";
-    if (r < 0.02) return "iron_ore";
-    if (r < 0.04) return "coal_ore";
+
+    // 深度ボーナス (Y=0付近で0, Y=BOTTOM_Y(-50)付近で1に近づく)
+    const depthBonus = Math.max(0, (0 - y) / 50);
+
+    // 深いほどボーナスがかかり確率が上がる
+    if (y < BOTTOM_Y + 20 && r < 0.001 + depthBonus * 0.003)
+      return "diamond_ore";
+    if (y < BOTTOM_Y + 35 && r < 0.003 + depthBonus * 0.005) return "gold_ore";
+    if (r < 0.015 + depthBonus * 0.015) return "iron_ore";
+    if (r < 0.03 + depthBonus * 0.02) return "coal_ore";
     return null;
   }
 

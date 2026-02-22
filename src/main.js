@@ -17,6 +17,10 @@ import { EventBus } from "./core/EventBus.js";
 import { TextureAtlas } from "./rendering/TextureAtlas.js";
 import { MaterialFactory } from "./rendering/MaterialFactory.js";
 import { ParticleSystem } from "./rendering/ParticleSystem.js";
+import { EntityManager } from "./entity/EntityManager.js";
+import { Pig } from "./entity/mobs/Pig.js";
+import { Zombie } from "./entity/mobs/Zombie.js";
+import { MobSpawner } from "./entity/MobSpawner.js";
 
 // --- World ---
 import { BlockRegistry } from "./world/BlockRegistry.js";
@@ -185,6 +189,8 @@ function startGameFlow() {
   );
   playerController.health = health;
 
+  const entityManager = new EntityManager(scene, world);
+
   // 初期位置
   if (savedData?.playerPos) {
     camera.position.set(
@@ -210,7 +216,22 @@ function startGameFlow() {
   // 8. インタラクション
   const raycaster = new BlockRaycaster(camera, scene, world);
   const dropItemManager = new DropItemManager(scene, materialFactory);
-  new BlockAction(world, raycaster, dropItemManager, physics, camera);
+  new BlockAction(
+    world,
+    raycaster,
+    dropItemManager,
+    physics,
+    camera,
+    entityManager,
+  );
+
+  // モブのドロップアイテム
+  EventBus.on("entity:killed", ({ pos, dropItem }) => {
+    if (dropItem) {
+      // 足元より少し上にドロップさせる
+      dropItemManager.spawn(pos.x, pos.y + 0.5, pos.z, dropItem);
+    }
+  });
 
   // 9. 昼夜サイクル
   const dayNightCycle = new DayNightCycle(
@@ -222,6 +243,16 @@ function startGameFlow() {
 
   // 10. パーティクル
   const particleSystem = new ParticleSystem(scene);
+
+  // モブマネジメント
+  const mobSpawner = new MobSpawner(
+    world,
+    physics,
+    scene,
+    entityManager,
+    playerController,
+    dayNightCycle,
+  );
 
   // 11. UI
   const pauseScreen = new PauseScreen(canvas);
@@ -251,9 +282,19 @@ function startGameFlow() {
     });
 
   const hotbarUI = new HotbarUI(textureAtlas, inventory, hotbar);
-  const inventoryUI = new InventoryUI(textureAtlas, inventory, hotbar);
+  const inventoryUI = new InventoryUI(
+    textureAtlas,
+    inventory,
+    hotbar,
+    blockRegistry,
+  );
   const craftingSystem = new CraftingSystem(inventory);
-  const craftingUI = new CraftingUI(textureAtlas, inventory, craftingSystem);
+  const craftingUI = new CraftingUI(
+    textureAtlas,
+    inventory,
+    craftingSystem,
+    blockRegistry,
+  );
   const mapUI = new MapUI(world, blockRegistry, camera);
   const uiManager = new UIManager(
     pauseScreen,
@@ -302,6 +343,8 @@ function startGameFlow() {
       dayNightCycle.update(delta);
       particleSystem.update(delta);
       dropItemManager.update(delta, camera.position);
+      mobSpawner.update(delta);
+      entityManager.update(delta);
       world.update(delta); // チャンクメッシュのGPUアップロードキュー消化
       uiManager.update();
 

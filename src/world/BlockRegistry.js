@@ -100,4 +100,30 @@ export class BlockRegistry {
     });
     return [...keys];
   }
+
+  /**
+   * 検索条件にマッチするブロックのリストを取得
+   * @param {string} category - カテゴリ (すべて表示時は 'all')
+   * @param {string} searchWord - 検索キーワード
+   * @returns {Array}
+   */
+  filterBlocks(category = "all", searchWord = "") {
+    return this.blocks.filter((block) => {
+      // 1. カテゴリフィルタ
+      if (category !== "all" && block.category !== category) {
+        return false;
+      }
+      // 2. 検索ワードフィルタ
+      if (searchWord) {
+        const word = searchWord.toLowerCase();
+        if (
+          !block.name.toLowerCase().includes(word) &&
+          !block.id.toLowerCase().includes(word)
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
 }

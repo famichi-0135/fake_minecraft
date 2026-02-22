@@ -129,6 +129,74 @@ export class TextureAtlas {
 
   // --- 内部: テクスチャ描画 ---
 
+  /**
+   * 破壊中のひび割れテクスチャを動的に生成して取得 (0〜9段階)
+   * @param {number} stage 0-9
+   */
+  getDestroyTexture(stage) {
+    const key = `destroy_${stage}`;
+    if (this.textures.has(key)) return this.textures.get(key);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = this.tileSize;
+    canvas.height = this.tileSize;
+    const ctx = canvas.getContext("2d");
+
+    // 背景は透明
+    ctx.clearRect(0, 0, this.tileSize, this.tileSize);
+
+    // ひび割れを描画
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.lineWidth = 1;
+    ctx.lineCap = "square";
+    ctx.lineJoin = "miter";
+    ctx.beginPath();
+
+    // ステージが進むごとに線の数を増やす
+    const linesToDraw = (stage + 1) * 2;
+    for (let i = 0; i < linesToDraw; i++) {
+      const seed = i * 12345 + 54321;
+
+      const startType = seed % 3;
+      let x1, y1;
+      if (startType === 0) {
+        x1 = 8;
+        y1 = 8;
+      } else if (startType === 1) {
+        x1 = (seed % 2) * 16;
+        y1 = ((seed >> 1) % 2) * 16;
+      } else {
+        x1 = seed % 17;
+        y1 = (seed * 13) % 17;
+      }
+
+      const x2 = (seed * 17) % 17;
+      const y2 = (seed * 19) % 17;
+
+      ctx.moveTo(x1, y1);
+
+      const midX = x1 + (x2 - x1) * 0.5 + (((seed * 23) % 5) - 2);
+      const midY = y1 + (y2 - y1) * 0.5 + (((seed * 29) % 5) - 2);
+
+      ctx.lineTo(midX, midY);
+      ctx.lineTo(x2, y2);
+
+      if (seed % 2 === 0) {
+        const x3 = (seed * 31) % 17;
+        const y3 = (seed * 37) % 17;
+        ctx.moveTo(midX, midY);
+        ctx.lineTo(x3, y3);
+      }
+    }
+
+    ctx.stroke();
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.magFilter = THREE.NearestFilter;
+    tex.minFilter = THREE.NearestFilter;
+    this.textures.set(key, tex);
+    return tex;
+  }
   _fillNoise(ctx, cBase, c1, c2, prob) {
     ctx.fillStyle = cBase;
     ctx.fillRect(0, 0, 16, 16);
@@ -329,6 +397,23 @@ export class TextureAtlas {
         }
         break;
       // --- 新ブロック・アイテム ---
+      case "raw_meat":
+        ctx.fillStyle = "#ffaaaa"; // 明るいピンク色（肉）
+        ctx.fillRect(2, 4, 12, 8);
+        ctx.fillStyle = "#ff8888"; // 肉の筋
+        ctx.fillRect(4, 5, 8, 5);
+        ctx.fillStyle = "#ffffff"; // 骨・脂肪
+        ctx.fillRect(10, 5, 2, 4);
+        break;
+      case "zombie_meat":
+        ctx.fillStyle = "#aa7755"; // 腐敗した色
+        ctx.fillRect(2, 4, 12, 8);
+        ctx.fillStyle = "#558855"; // 緑色の変色
+        ctx.fillRect(4, 5, 2, 2);
+        ctx.fillRect(9, 8, 3, 2);
+        ctx.fillStyle = "#ccaa88"; // 古い骨・脂肪
+        ctx.fillRect(10, 5, 2, 4);
+        break;
       case "torch":
         ctx.fillStyle = "#2a2a2a";
         ctx.fillRect(0, 0, 16, 16);
